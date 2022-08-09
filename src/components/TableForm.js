@@ -12,27 +12,35 @@ import Tooltip from "@mui/material/Tooltip"
 import Button from "@mui/material/Button"
 import React, { useState, useEffect } from "react"
 
-export const TableForm = ({ people }) => {
+export const TableForm = ({ people, flist }) => {
   const [tpeople, setTpeople] = useState(people)
-  //   console.log(tpeople)
+  const a = flist
+  // console.log(a)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [page, setPage] = useState(0)
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 2))
     setPage(0)
   }
-  useEffect(() => {}, [tpeople])
+  //   useEffect(() => {}, [tpeople])
 
   const asceCust = (e) => {
-    e.preventDefault()
-    const scust = people
+    const a = e.target.value
+    const b = e.target.name
+    console.log(a)
+    console.log(b)
+    const scust = JSON.parse(JSON.stringify(tpeople))
+
     scust.sort((a, b) => {
       return a.name > b.name ? 1 : -1
     })
     // console.log("sort", people)
-    setTpeople(people)
+    setTpeople(scust)
     console.log(scust)
   }
+
+  //   console.log(people)
+
   const asceProstaus = (e) => {
     const scust = people
     scust.sort((a, b) => {
@@ -89,6 +97,7 @@ export const TableForm = ({ people }) => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
+  console.log("people", people)
 
   return (
     <>
@@ -100,7 +109,11 @@ export const TableForm = ({ people }) => {
                 Customer
                 <Tooltip title="Filter" placement="right-start">
                   <Button onClick={asceCust} style={{ padding: "0px" }}>
-                    <UnfoldMoreIcon style={{ alignItems: "center" }} />
+                    <UnfoldMoreIcon
+                      value="name"
+                      name="namename"
+                      style={{ alignItems: "center" }}
+                    />
                   </Button>
                 </Tooltip>
               </TableCell>
@@ -155,7 +168,6 @@ export const TableForm = ({ people }) => {
               <TableCell style={myStyle}>Name Change</TableCell>
             </TableRow>
           </TableHead>
-          {console.log("people", people)}
           {tpeople.length > 0 && (
             <TableBody>
               {tpeople

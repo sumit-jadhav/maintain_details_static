@@ -2,37 +2,28 @@ import React, { useState, useEffect } from "react"
 import { TableForm } from "../components/TableForm"
 import SearchBar from "../components/SearchBar"
 import "./TableCust"
-
-// import { AppContext } from "../AppProvider"
+import FilterBar from "../components/FilterBar"
 import data from "../components/data"
 
 export const TableCust = () => {
   const [people, setPeople] = useState(data)
-
-  const [page, setPage] = useState(0)
-  const [customer, setCustomer] = useState("")
+  const [search, setSearch] = useState("")
+  // const [customer, setCustomer] = useState("")
   const [flist, setFlist] = useState([])
 
-  // useEffect(() => {
-  //   setPeople(data)
-  // }, [])
-
-  // const handleChange = (event) => {
-  //   setCustomer(event.target.value)
-  // }
-
-  // useEffect(() => {
-  //   console.log(flist)
-  // }, [flist])
+  useEffect(() => {
+    console.log(flist)
+  }, [flist])
 
   return (
     <>
       <SearchBar
         setFlist={setFlist}
+        setSearch={setSearch}
         people={people}
-        setPeople={setPeople}
       ></SearchBar>
-      <TableForm people={people} page={page} setPage={setPage} />
+      <FilterBar flist={flist} setFlist={setFlist}></FilterBar>
+      <TableForm people={people} flist={flist} />
     </>
   )
 }

@@ -1,78 +1,134 @@
-import Stack from "@mui/material/Stack"
 import SearchIcon from "@mui/icons-material/Search"
 import TextField from "@mui/material/TextField"
 import InputAdornment from "@mui/material/InputAdornment"
 import FilterAltIcon from "@mui/icons-material/FilterAlt"
-import Tooltip from "@mui/material/Tooltip"
 import Button from "@mui/material/Button"
 import React, { useState, useEffect } from "react"
+import Box from "@mui/material/Box"
+import Drawer from "@mui/material/Drawer"
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import ListItemButton from "@mui/material/ListItemButton"
-import ListItemText from "@mui/material/ListItemText"
-import Checkbox from "@mui/material/Checkbox"
-import Paper from "@mui/material/Paper"
-import { styled } from "@mui/material/styles"
-import CancelIcon from "@mui/icons-material/Cancel"
-import { padding } from "@mui/system"
+import ListItemIcon from "@mui/material/ListItemIcon"
+import Autocomplete from "@mui/material/Autocomplete"
 
-const SearchBar = ({ people }) => {
-  const p = people
-  console.log(p)
-  const [checked, setChecked] = useState([])
-  const [uniqueTags, setUniqueTags] = useState([])
-  const [filter, setFilter] = useState(false)
+const SearchBar = ({ people, setSearch, setFlist }) => {
+  const ProjectStatus = [
+    "Advance Received",
+    "Welcome Call",
+    "Ready for installation",
+    "DEV Schedule",
+  ]
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value)
-    const newChecked = [...checked]
+  const PermitStatus = ["LC Permit", "NC Permit", "PC Permit"]
+  const City = ["East Delhi", "West Delhi", "Nort Delhi", "North East Delhi"]
 
-    if (currentIndex === -1) {
-      newChecked.push(value)
-    } else {
-      newChecked.splice(currentIndex, 1)
+  const [valueProject, setValueProject] = useState(null)
+  const [valuePermit, setValuePermit] = useState(null)
+  const [valueCity, setValueCity] = useState(null)
+
+  const [state, setState] = useState({
+    right: false,
+  })
+  const ApplyFilter = () => setFlist([valuePermit, valueProject, valueCity])
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return
     }
-    setChecked(newChecked)
-    console.log(newChecked)
+    setState({ ...state, [anchor]: open })
   }
 
-  const filterBox = () => {
-    const a = []
-    people.map(async (img) => {
-      if (a.indexOf(img.projectStatus) === -1) {
-        await a.push(img.projectStatus)
-      }
-      if (a.indexOf(img.permitStatus) === -1) {
-        await a.push(img.permitStatus)
-      }
-      if (a.indexOf(img.AssignTo) === -1) {
-        await a.push(img.AssignTo)
-      }
-      if (a.indexOf(img.City) === -1) {
-        await a.push(img.City)
-      }
-      if (a.indexOf(img.ProjectType) === -1) {
-        await a.push(img.ProjectType)
-      }
-    })
-    // console.log(a)
-    setUniqueTags(a)
-    setFilter(!filter)
+  const list = (anchor) => (
+    <Box
+      sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
+      role="presentation"
+      // onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <div>
+                <br />
+                <Autocomplete
+                  value={valuePermit}
+                  onChange={(event, newValue) => {
+                    setValuePermit(newValue)
+                  }}
+                  id="PermitStatus"
+                  options={PermitStatus}
+                  sx={{ width: 200 }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="PermitStatus" />
+                  )}
+                />
+              </div>
+            </ListItemIcon>
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <div>
+                <br />
+                <Autocomplete
+                  value={valueProject}
+                  onChange={(event, newValue) => {
+                    setValueProject(newValue)
+                  }}
+                  id="ProjectStatus"
+                  options={ProjectStatus}
+                  sx={{ width: 200 }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="ProjectStatus" />
+                  )}
+                />
+              </div>
+            </ListItemIcon>
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <div>
+                <br />
+                <Autocomplete
+                  value={valueCity}
+                  onChange={(event, newValue) => {
+                    setValueCity(newValue)
+                  }}
+                  id="City"
+                  options={City}
+                  sx={{ width: 200 }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="City" />
+                  )}
+                />
+              </div>
+            </ListItemIcon>
+          </ListItemButton>
+        </ListItem>
+        <ListItem>
+          <Button
+            onClick={function (event) {
+              toggleDrawer(anchor, false)
+              ApplyFilter()
+            }}
+          >
+            Apply
+          </Button>
+        </ListItem>
+      </List>
+    </Box>
+  )
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value)
   }
-
-  //   useEffect(() => {
-  //     props.setFlist(checked)
-  //     console.log("sheckked")
-  //   }, [checked])
-
-  //   console.log(list)
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  }))
 
   return (
     <>
@@ -84,75 +140,25 @@ const SearchBar = ({ people }) => {
             flexDirection: "row-reverse",
           }}
         >
-          {!filter && (
-            <Tooltip title="Filter" placement="right-start">
-              <Button onClick={filterBox} style={{ padding: "0px" }}>
-                <FilterAltIcon></FilterAltIcon>
-              </Button>
-            </Tooltip>
-          )}
-          {filter && (
-            <div>
-              <List
-                dense
-                sx={{
-                  width: "100%",
-                  maxWidth: 360,
-                  bgcolor: "background.paper",
-                  position: "relative",
-                  overflow: "auto",
-                  maxHeight: 150,
-                  "& ul": { padding: 0 },
-                }}
-              >
-                {uniqueTags.map((value) => {
-                  const labelId = `checkbox-list-secondary-label-${value}`
-                  return (
-                    <ListItem
-                      key={value}
-                      secondaryAction={
-                        <Checkbox
-                          edge="end"
-                          onChange={handleToggle(value)}
-                          checked={checked.indexOf(value) !== -1}
-                          inputProps={{ "aria-labelledby": labelId }}
-                        />
-                      }
-                      disablePadding
-                    >
-                      <ListItemButton>
-                        <ListItemText id={labelId} primary={`${value}`} />
-                      </ListItemButton>
-                    </ListItem>
-                  )
-                })}
-              </List>
-              <div
-                style={{
-                  backgroundColor: "blue",
-                  display: "flex",
-                }}
-              >
-                {checked.length > 0 &&
-                  checked.map((i) => (
-                    <Stack direction="row" spacing={2}>
-                      <Item style={{ design: "flex", padding: "0px" }}>
-                        {i}
-                        <Button onClick={filterBox} style={{ padding: "0px" }}>
-                          <CancelIcon style={{ padding: "0px" }} />
-                        </Button>
-                      </Item>
-                    </Stack>
-                  ))}
-              </div>
-              <Button onClick={filterBox} style={{ padding: "0px" }}>
-                Apply
-              </Button>
-            </div>
-          )}
+          <div>
+            {["right"].map((a) => (
+              <React.Fragment key={a}>
+                <Button onClick={toggleDrawer(a, true)}>
+                  <FilterAltIcon></FilterAltIcon>
+                </Button>
+                <Drawer
+                  anchor={a}
+                  open={state[a]}
+                  onClose={toggleDrawer(a, false)}
+                >
+                  {list(a)}
+                </Drawer>
+              </React.Fragment>
+            ))}
+          </div>
           <TextField
             id="outlined-start-adornment"
-            // onChange={handleSearch}
+            onChange={handleSearch}
             style={{
               m: 1,
               width: "25ch",
