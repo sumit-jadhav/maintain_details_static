@@ -8,8 +8,11 @@ import data from "../components/data"
 export const TableCust = () => {
   const [people, setPeople] = useState(data)
   const [search, setSearch] = useState("")
-  // const [customer, setCustomer] = useState("")
-  const [flist, setFlist] = useState([])
+  const [flist, setFlist] = useState({
+    projectStatus: null,
+    permitStatus: null,
+    City: null,
+  })
 
   useEffect(() => {
     console.log(flist)
@@ -19,6 +22,7 @@ export const TableCust = () => {
     <>
       <SearchBar
         setFlist={setFlist}
+        flist={flist}
         setSearch={setSearch}
         people={people}
       ></SearchBar>

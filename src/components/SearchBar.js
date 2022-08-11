@@ -12,7 +12,7 @@ import ListItemButton from "@mui/material/ListItemButton"
 import ListItemIcon from "@mui/material/ListItemIcon"
 import Autocomplete from "@mui/material/Autocomplete"
 
-const SearchBar = ({ people, setSearch, setFlist }) => {
+const SearchBar = (props) => {
   const ProjectStatus = [
     "Advance Received",
     "Welcome Call",
@@ -30,7 +30,18 @@ const SearchBar = ({ people, setSearch, setFlist }) => {
   const [state, setState] = useState({
     right: false,
   })
-  const ApplyFilter = () => setFlist([valuePermit, valueProject, valueCity])
+
+  const ApplyFilter = () => {
+    props.setFlist({
+      ...props.flist,
+      projectStatus: valueProject,
+      permitStatus: valuePermit,
+      City: valueCity,
+    })
+    console.log(props.flist)
+    console.log(valueProject)
+  }
+
   const toggleDrawer = (anchor, open) => (event) => {
     if (
       event.type === "keydown" &&
@@ -45,7 +56,6 @@ const SearchBar = ({ people, setSearch, setFlist }) => {
     <Box
       sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
       role="presentation"
-      // onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
@@ -127,7 +137,7 @@ const SearchBar = ({ people, setSearch, setFlist }) => {
   )
 
   const handleSearch = (e) => {
-    setSearch(e.target.value)
+    // setSearch(e.target.value)
   }
 
   return (

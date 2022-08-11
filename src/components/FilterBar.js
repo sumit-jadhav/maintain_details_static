@@ -4,7 +4,9 @@ import Button from "@mui/material/Button"
 import { styled } from "@mui/material/styles"
 import Paper from "@mui/material/Paper"
 
-const FilterBar = ({ flist, setFlist }) => {
+const FilterBar = (props) => {
+  console.log(props.flist)
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -12,22 +14,17 @@ const FilterBar = ({ flist, setFlist }) => {
     textAlign: "center",
     color: theme.palette.text.secondary,
   }))
-  const clearfilter = () => setFlist([])
+  const clearfilter = () => props.setFlist([])
 
   const removeItem = (e) => {
-    const newPeople = JSON.parse(JSON.stringify(flist))
-    var a = flist.findIndex(e.target.value)
-    console.log(a)
-
-    // newPeople.filter((a) => a !== e.target.value)
-    // setFlist(newPeople)
-    // console.log(flist)
-
-    //   delete newPeople[a]
-    //   setFlist(newPeople)
-    //   console.log(flist)
+    props.setFlist({
+      ...props.flist,
+      [e.target.id]: null,
+    })
   }
 
+  const size = Object.keys(props.flist).length
+  // console.log(size)
   return (
     <>
       <div
@@ -36,28 +33,36 @@ const FilterBar = ({ flist, setFlist }) => {
           display: "flex",
         }}
       >
-        {flist.length > 0 &&
-          flist.map((i) => (
-            <Stack direction="row" spacing={2}>
-              <Item style={{ design: "flex" }}>
-                {i}
-                <Button
-                  value={i}
-                  onClick={removeItem}
-                  style={{ padding: "0px" }}
+        {size > 0 &&
+          Object.keys(props.flist).map(
+            (i, v) =>
+              props.flist[i] !== null && (
+                <Stack
+                  key={i}
+                  value={props.flist[i]}
+                  direction="row"
+                  spacing={2}
                 >
-                  <CancelIcon />
-                </Button>
-              </Item>
-            </Stack>
-          ))}
-        {flist.length > 0 && (
+                  <Item style={{ design: "flex" }}>
+                    {props.flist[i]}
+                    <Button
+                      value={props.flist[i]}
+                      id={[i]}
+                      onClick={removeItem}
+                      style={{ padding: "0px" }}
+                    >
+                      <CancelIcon value={props.flist[i]} id={[i]} />
+                    </Button>
+                  </Item>
+                </Stack>
+              )
+          )}
+        {props.flist.length > 0 && (
           <div style={{ justifyContent: "flex-end" }}>
             <Button
               onClick={clearfilter}
               style={{
                 backgroundColor: "#3480EE",
-
                 padding: "0px",
               }}
             >
@@ -69,4 +74,5 @@ const FilterBar = ({ flist, setFlist }) => {
     </>
   )
 }
+
 export default FilterBar

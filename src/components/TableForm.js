@@ -14,82 +14,57 @@ import React, { useState, useEffect } from "react"
 
 export const TableForm = ({ people, flist }) => {
   const [tpeople, setTpeople] = useState(people)
-  const a = flist
-  // console.log(a)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [page, setPage] = useState(0)
+  const [sort, setSort] = useState(true)
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 2))
     setPage(0)
   }
-  //   useEffect(() => {}, [tpeople])
+
+  // const size = Object.keys(flist).length
+  // if (size > 0) {
+  //   Object.keys(flist).map((e, k) => {
+  //     console.log(e)
+  //   })
+  // }
+
+  const coloumHeadersArray = Object.keys(tpeople[0])
+
+  // Object.keys(flist).map((e, k) => {
+  //   console.log(e)
+  // })
+
+  coloumHeadersArray.map((h, i) => {
+    tpeople.map((eachRow, index) => {
+      // console.log(eachRow[h], flist[h])
+      if (eachRow[h] === flist[h]) {
+        console.log(eachRow)
+      }
+    })
+  })
 
   const asceCust = (e) => {
-    const a = e.target.value
-    const b = e.target.name
-    console.log(a)
-    console.log(b)
+    const val = e.target.id
     const scust = JSON.parse(JSON.stringify(tpeople))
-
     scust.sort((a, b) => {
-      return a.name > b.name ? 1 : -1
+      // console.log(a[val], b[val])
+      if (sort) {
+        setSort(!sort)
+        return a[val] > b[val] ? 1 : -1
+      } else {
+        setSort(!sort)
+        return a[val] < b[val] ? 1 : -1
+      }
     })
-    // console.log("sort", people)
-    setTpeople(scust)
     console.log(scust)
+    setTpeople(scust)
   }
 
-  //   console.log(people)
-
-  const asceProstaus = (e) => {
-    const scust = people
-    scust.sort((a, b) => {
-      return a.projectStatus > b.projectStatus ? 1 : -1
-    })
-    setTpeople(scust)
-    console.log(scust)
-  }
-  const ascePerstatus = (e) => {
-    const scust = people
-    scust.sort((a, b) => {
-      return a.permitStatus > b.permitStatus ? 1 : -1
-    })
-    setTpeople(scust)
-    console.log(scust)
-  }
-  const asceAssiTo = (e) => {
-    const scust = people
-    scust.sort((a, b) => {
-      return a.AssignTo > b.AssignTo ? 1 : -1
-    })
-    setTpeople(scust)
-    console.log(scust)
-  }
-  const ascePhNo = (e) => {
-    const scust = people
-    scust.sort((a, b) => {
-      return a.phoneNumber > b.phoneNumber ? 1 : -1
-    })
-    setTpeople(scust)
-    console.log(scust)
-  }
-  const asceCity = (e) => {
-    const scust = people
-    scust.sort((a, b) => {
-      return a.City > b.City ? 1 : -1
-    })
-    setTpeople(scust)
-    console.log(scust)
-  }
-  const asceProType = (e) => {
-    const scust = people
-    scust.sort((a, b) => {
-      return a.ProjectType > b.ProjectType ? 1 : -1
-    })
-    setTpeople(scust)
-    console.log(scust)
-  }
   const myStyle = {
+    // display: "flex",
+    // flexDirection: "row",
     padding: "0px",
     boxSizing: "content-box",
   }
@@ -97,7 +72,7 @@ export const TableForm = ({ people, flist }) => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
-  console.log("people", people)
+  // console.log("people", people)
 
   return (
     <>
@@ -108,10 +83,15 @@ export const TableForm = ({ people, flist }) => {
               <TableCell style={myStyle}>
                 Customer
                 <Tooltip title="Filter" placement="right-start">
-                  <Button onClick={asceCust} style={{ padding: "0px" }}>
+                  <Button
+                    id="name"
+                    value="name"
+                    onClick={asceCust}
+                    style={{ padding: "0px" }}
+                  >
                     <UnfoldMoreIcon
+                      id="name"
                       value="name"
-                      name="namename"
                       style={{ alignItems: "center" }}
                     />
                   </Button>
@@ -120,23 +100,41 @@ export const TableForm = ({ people, flist }) => {
               <TableCell style={myStyle}>
                 Project Status
                 <Tooltip title="Filter" placement="right-start">
-                  <Button onClick={asceProstaus} style={{ padding: "0px" }}>
-                    <UnfoldMoreIcon style={{ alignItems: "center" }} />
+                  <Button
+                    id="projectStatus"
+                    value="projectStatus"
+                    onClick={asceCust}
+                    style={{ padding: "0px" }}
+                  >
+                    <UnfoldMoreIcon
+                      id="projectStatus"
+                      value="projectStatus"
+                      style={{ alignItems: "center" }}
+                    />
                   </Button>
                 </Tooltip>
               </TableCell>
               <TableCell style={myStyle}>
                 Permit Status
                 <Tooltip title="Filter" placement="right-start">
-                  <Button onClick={ascePerstatus} style={{ padding: "0px" }}>
-                    <UnfoldMoreIcon style={{ alignItems: "center" }} />
+                  <Button
+                    id="permitStatus"
+                    value="permitStatus"
+                    onClick={asceCust}
+                    style={{ padding: "0px" }}
+                  >
+                    <UnfoldMoreIcon
+                      id="permitStatus"
+                      value="permitStatus"
+                      style={{ alignItems: "center" }}
+                    />
                   </Button>
                 </Tooltip>
               </TableCell>
               <TableCell style={myStyle}>
                 Phone Number
                 <Tooltip title="Filter" placement="right-start">
-                  <Button onClick={ascePhNo} style={{ padding: "0px" }}>
+                  <Button onClick={asceCust} style={{ padding: "0px" }}>
                     <UnfoldMoreIcon style={{ alignItems: "center" }} />
                   </Button>
                 </Tooltip>
@@ -144,7 +142,12 @@ export const TableForm = ({ people, flist }) => {
               <TableCell style={myStyle}>
                 Assigned To
                 <Tooltip title="Filter" placement="right-start">
-                  <Button onClick={asceAssiTo} style={{ padding: "0px" }}>
+                  <Button
+                    id="AssignTo"
+                    value="AssignTo"
+                    onClick={asceCust}
+                    style={{ padding: "0px" }}
+                  >
                     <UnfoldMoreIcon style={{ alignItems: "center" }} />
                   </Button>
                 </Tooltip>
@@ -152,16 +155,34 @@ export const TableForm = ({ people, flist }) => {
               <TableCell style={myStyle}>
                 City
                 <Tooltip title="Filter" placement="right-start">
-                  <Button onClick={asceCity} style={{ padding: "0px" }}>
-                    <UnfoldMoreIcon style={{ alignItems: "center" }} />
+                  <Button
+                    id="City"
+                    value="City"
+                    onClick={asceCust}
+                    style={{ padding: "0px" }}
+                  >
+                    <UnfoldMoreIcon
+                      id="City"
+                      value="City"
+                      style={{ alignItems: "center" }}
+                    />
                   </Button>
                 </Tooltip>
               </TableCell>
               <TableCell style={myStyle}>
                 Project Type
                 <Tooltip title="Filter" placement="right-start">
-                  <Button onClick={asceProType} style={{ padding: "0px" }}>
-                    <UnfoldMoreIcon style={{ alignItems: "center" }} />
+                  <Button
+                    id="ProjectType"
+                    value="ProjectType"
+                    onClick={asceCust}
+                    style={{ padding: "0px" }}
+                  >
+                    <UnfoldMoreIcon
+                      id="ProjectType"
+                      value="ProjectType"
+                      style={{ alignItems: "center" }}
+                    />
                   </Button>
                 </Tooltip>
               </TableCell>
